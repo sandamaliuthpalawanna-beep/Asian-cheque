@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rio Enterprise — Admin</title>
+<style>
+/* ===== Rio Enterprise — Admin Panel Design System =====
+   Palette carries the site's teal/amber identity into a working tool.
+   Teal = structure & trust, amber = action & attention. */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Color */
+  --teal-950: #0a2b28;
+  --teal-800: #0f4742;
+  --teal-600: #157a70;
+  --teal-500: #1c9587;
+  --teal-100: #e3f1ee;
+  --amber-600: #c17d1f;
+  --amber-500: #dd9a30;
+  --amber-100: #fbecd3;
+  --bg: #f5f6f2;
+  --surface: #ffffff;
+  --ink-900: #17231f;
+  --ink-600: #55625c;
+  --ink-400: #8b968f;
+  --border: #dfe4de;
+  --danger: #b6493f;
+  --danger-bg: #fbebe9;
+  --success: #2f7d54;
+  --success-bg: #e8f4ec;
+
+  /* Type */
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Layout */
+  --sidebar-w: 236px;
+  --radius: 8px;
+  --shadow: 0 4px 20px rgba(10, 43, 40, 0.08);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink-900);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, .brand-name { font-family: var(--font-display); }
+
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+
+a { color: inherit; }
+
+/* ---------- App shell ---------- */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  background: var(--teal-950);
+  color: #eef6f4;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 10px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 14px;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.2px;
+}
+
+.brand-tag {
+  font-size: 11px;
+  color: var(--amber-500);
+}
+
+.nav-group-label {
+  font-size: 11.5px;
+  color: rgba(238,246,244,0.45);
+  padding: 14px 10px 6px;
+}
+
+.nav-list { list-style: none; margin: 0; padding: 0; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  color: rgba(238,246,244,0.82);
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  margin-bottom: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+
+.nav-link.active {
+  background: rgba(221, 154, 48, 0.14);
+  color: #fff;
+  border-left-color: var(--amber-500);
+  font-weight: 600;
+}
+
+.nav-icon { width: 18px; text-align: center; opacity: 0.9; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.signout-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(238,246,244,0.8);
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.signout-btn:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+/* ---------- Main column ---------- */
+.main { display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-title { font-size: 20px; font-weight: 700; margin: 0; }
+.page-sub { color: var(--ink-600); font-size: 13px; margin-top: 2px; }
+
+.topbar-user { font-size: 13px; color: var(--ink-600); }
+
+.content { padding: 24px 28px 60px; }
+
+/* ---------- Sub tabs (within a module) ---------- */
+.subtabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.subtab {
+  padding: 9px 16px;
+  font-size: 13.5px;
+  color: var(--ink-600);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  background: none;
+  border-top: none; border-left: none; border-right: none;
+}
+
+.subtab.active {
+  color: var(--teal-800);
+  font-weight: 600;
+  border-bottom-color: var(--teal-600);
+}
+
+/* ---------- Cards / panels ---------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-head h2 { font-size: 16px; margin: 0; }
+
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 20px; }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.stat-card .label { font-size: 12.5px; color: var(--ink-600); }
+.stat-card .value { font-family: var(--font-display); font-size: 24px; font-weight: 700; margin-top: 4px; }
+.stat-card .value.amber { color: var(--amber-600); }
+.stat-card .value.teal { color: var(--teal-700); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary { background: var(--teal-700); color: #fff; }
+.btn-primary:hover { background: var(--teal-800); }
+
+.btn-amber { background: var(--amber-500); color: #2c1c04; }
+.btn-amber:hover { background: var(--amber-600); }
+
+.btn-ghost { background: transparent; border-color: var(--border); color: var(--ink-900); }
+.btn-ghost:hover { background: var(--bg); }
+
+.btn-danger { background: var(--danger-bg); color: var(--danger); }
+.btn-danger:hover { background: #f5d8d5; }
+
+.btn-sm { padding: 5px 10px; font-size: 12.5px; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Forms ---------- */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12.5px; color: var(--ink-600); margin-bottom: 5px; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink-900);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--teal-500);
+  box-shadow: 0 0 0 3px var(--teal-100);
+}
+.field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+
+/* ---------- Table ---------- */
+.table-wrap { overflow-x: auto; }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.data-table th {
+  text-align: left;
+  font-size: 12px;
+  color: var(--ink-600);
+  font-weight: 600;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--bg); }
+.data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- Badges ---------- */
+.badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+.badge-teal { background: var(--teal-100); color: var(--teal-800); }
+.badge-amber { background: var(--amber-100); color: var(--amber-600); }
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-danger { background: var(--danger-bg); color: var(--danger); }
+
+/* ---------- Search ---------- */
+.search-box { position: relative; min-width: 220px; }
+.search-box input { padding-left: 30px; }
+.search-box::before {
+  content: "⌕";
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--ink-400); font-size: 15px;
+}
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(10,43,40,0.45);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 16px; overflow-y: auto; z-index: 50;
+}
+.modal {
+  background: var(--surface);
+  border-radius: 10px;
+  width: 100%; max-width: 560px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+.modal h3 { margin: 0 0 4px; font-size: 17px; }
+.modal .modal-sub { color: var(--ink-600); font-size: 13px; margin-bottom: 16px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+
+.hidden { display: none !important; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-600);
+}
+.empty-state .big { font-size: 15px; color: var(--ink-900); font-weight: 600; margin-bottom: 4px; }
+
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--ink-900); color: #fff;
+  padding: 11px 18px; border-radius: 8px; font-size: 13.5px;
+  box-shadow: var(--shadow); z-index: 100;
+}
+.toast.error { background: var(--danger); }
+.toast.success { background: var(--success); }
+
+.qty-diff-ok { color: var(--success); font-weight: 600; }
+.qty-diff-bad { color: var(--danger); font-weight: 600; }
+
+.coming-soon {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 50px 20px;
+  text-align: center;
+  color: var(--ink-600);
+}
+
+@media (max-width: 880px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { position: relative; height: auto; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ===== Login screen ===== -->
+<div id="loginScreen" class="modal-backdrop" style="align-items:center;">
+  <div class="modal" style="max-width:380px;">
+    <h3>Rio Enterprise Admin</h3>
+    <p class="modal-sub">Sign in to continue</p>
+    <div class="field">
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" placeholder="you@rioenterprise.lk">
+    </div>
+    <div class="field">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <p id="loginError" class="hidden" style="color:var(--danger); font-size:13px;"></p>
+    <div class="modal-actions" style="justify-content:stretch;">
+      <button class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;">Sign in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== App shell ===== -->
+<div class="app hidden" id="appShell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-name">Rio Enterprise</span>
+    </div>
+    <span class="brand-tag" style="padding:0 10px 14px; display:block;">Admin panel</span>
+
+    <div class="nav-group-label">Overview</div>
+    <ul class="nav-list">
+      <li><a class="nav-link active" data-module="dashboard">Dashboard</a></li>
+    </ul>
+
+    <div class="nav-group-label">Catalogue</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" data-module="items">Items</a></li>
+      <li><a class="nav-link" data-module="stock">Stock</a></li>
+    </ul>
+
+    <div class="nav-group-label">Sales</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" data-module="customers">Customers</a></li>
+      <li><a class="nav-link" data-module="bills">Bills</a></li>
+      <li><a class="nav-link" data-module="collections">Monthly collection</a></li>
+    </ul>
+
+    <div class="nav-group-label">Books</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" data-module="billbook">Bill book</a></li>
+      <li><a class="nav-link" data-module="chitbook">Chit book</a></li>
+    </ul>
+
+    <div class="nav-group-label">Reports</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" data-module="financial">Financial</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="signout-btn" id="signOutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        <div class="page-sub" id="pageSub">Overview of today's activity</div>
+      </div>
+      <div class="topbar-user" id="topbarUser"></div>
+    </div>
+
+    <div class="content">
+
+      <!-- Dashboard -->
+      <section class="module-view" id="module-dashboard">
+        <div class="stat-row">
+          <div class="stat-card"><div class="label">Items in catalogue</div><div class="value teal" id="statItemCount">—</div></div>
+          <div class="stat-card"><div class="label">Main store stock units</div><div class="value teal" id="statMainStock">—</div></div>
+          <div class="stat-card"><div class="label">Vehicles tracked</div><div class="value amber">3</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Getting started</h2></div>
+          <p style="color:var(--ink-600); font-size:13.5px;">Use the sidebar to manage items, stock across the main store and vehicles, and (soon) customers, bills, and collections. Start by adding items under <strong>Items</strong>, then set opening stock under <strong>Stock</strong>.</p>
+        </div>
+      </section>
+
+      <!-- Items -->
+      <section class="module-view hidden" id="module-items"></section>
+
+      <!-- Stock -->
+      <section class="module-view hidden" id="module-stock"></section>
+
+      <!-- Stub modules -->
+      <section class="module-view hidden" id="module-customers"></section>
+      <section class="module-view hidden" id="module-bills">
+        <div class="coming-soon"><div class="big" style="color:var(--ink-900); font-weight:600; margin-bottom:6px;">Bills</div>Coming next — bill entry with bill-number lookup and customer linking.</div>
+      </section>
+      <section class="module-view hidden" id="module-collections">
+        <div class="coming-soon"><div class="big" style="color:var(--ink-900); font-weight:600; margin-bottom:6px;">Monthly collection</div>Coming next — bulk installment collection entry with auto-verification.</div>
+      </section>
+      <section class="module-view hidden" id="module-billbook">
+        <div class="coming-soon"><div class="big" style="color:var(--ink-900); font-weight:600; margin-bottom:6px;">Bill book</div>Coming next — bill book number tracking.</div>
+      </section>
+      <section class="module-view hidden" id="module-chitbook">
+        <div class="coming-soon"><div class="big" style="color:var(--ink-900); font-weight:600; margin-bottom:6px;">Chit book</div>Coming next — chit book number tracking.</div>
+      </section>
+      <section class="module-view hidden" id="module-financial">
+        <div class="coming-soon"><div class="big" style="color:var(--ink-900); font-weight:600; margin-bottom:6px;">Financial</div>Coming next — financial summary and reports.</div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div id="toastHost"></div>
+
+<script type="module">
+// Firebase initialization for Rio Enterprise Admin Panel
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc,
+  deleteDoc, query, where, orderBy, limit, runTransaction, serverTimestamp,
+  onSnapshot, increment, writeBatch
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB-OuU-u2SxwydsUnUzKQ-2Mro4YgDW-Jg",
+  authDomain: "rio-enterprises.firebaseapp.com",
+  projectId: "rio-enterprises",
+  storageBucket: "rio-enterprises.firebasestorage.app",
+  messagingSenderId: "620316792670",
+  appId: "1:620316792670:web:435d73349f07ed22bd21cf",
+  measurementId: "G-8RZSCYHJEH"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// Analytics only works in a real browser with the right support — guard it
+let analytics = null;
+analyticsIsSupported().then((ok) => { if (ok) analytics = getAnalytics(app); });
+
+
+/* ===== shared helpers (resolved lazily to avoid circular deps) ===== */
+const __core = {};
+const showToast = (...a) => __core.showToast(...a);
+const fmtMoney = (...a) => __core.fmtMoney(...a);
+const fmtDate = (...a) => __core.fmtDate(...a);
+
+/* ===== catalogue data ===== */
+// Rio Enterprises item catalogue (158 items) - used by the Items > Import catalogue button
+const CATALOG_DATA = [
+ {
+  "itemCode": "701001001",
+  "category": "7 - Miscellaneous & Special Items",
+  "subCategory": "7010",
+  "itemName": "NET 6*4",
+  "price": 0.0
+ },
+ {
+  "itemCode": "701002001",
+  "category": "7 - Miscellaneous & Special Items",
+  "subCategory": "7010",
+  "itemName": "SOFA 3.11 STOOL",
+  "price": 285000.0
+ },
+ {
+  "itemCode": "701003601",
+  "category": "7 - Miscellaneous & Special Items",
+  "subCategory": "7010",
+  "itemName": "FLASK",
+  "price": 3900.0
+ },
+ {
+  "itemCode": "703001001",
+  "category": "7 - Miscellaneous & Special Items",
+  "subCategory": "7030",
+  "itemName": "UMBRELLA L",
+  "price": 14900.0
+ },
+ {
+  "itemCode": "704001001",
+  "category": "7 - Miscellaneous & Special Items",
+  "subCategory": "7040",
+  "itemName": "PHOCILING SET 74PCS",
+  "price": 34900.0
+ },
+ {
+  "itemCode": "A1001002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*42 PIYESTRA",
+  "price": 15900.0
+ },
+ {
+  "itemCode": "A1001003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*48 PIYESTRA",
+  "price": 16900.0
+ },
+ {
+  "itemCode": "A1001004",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*54 PIYESTRA",
+  "price": 19900.0
+ },
+ {
+  "itemCode": "A1001005",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*60 PIYESTRA",
+  "price": 22900.0
+ },
+ {
+  "itemCode": "A1001006",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*72 PIYESTRA",
+  "price": 29900.0
+ },
+ {
+  "itemCode": "A1001007",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "75*48 PIYESTRA",
+  "price": 18900.0
+ },
+ {
+  "itemCode": "A1001008",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "75*60 PIYESTRA",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "A1001009",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "75*72 PIYESTRA",
+  "price": 32500.0
+ },
+ {
+  "itemCode": "A1002001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*48 HYBRID HAYLES",
+  "price": 26500.0
+ },
+ {
+  "itemCode": "A1002002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*60 HYBRID HAYLES",
+  "price": 36500.0
+ },
+ {
+  "itemCode": "A1002003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*72 HYBRID HAYLES",
+  "price": 43500.0
+ },
+ {
+  "itemCode": "A1002004",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "75*72 HYBRID HAYLES",
+  "price": 44500.0
+ },
+ {
+  "itemCode": "A1003001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*36 KINGS STAR",
+  "price": 9900.0
+ },
+ {
+  "itemCode": "A1003002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*48 KINGS STAR",
+  "price": 12900.0
+ },
+ {
+  "itemCode": "A1003003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*60 KINGS STAR",
+  "price": 15900.0
+ },
+ {
+  "itemCode": "A1004001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*60*8 SPRIN HYEL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "A1004002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*48*8 SPRIN HYE",
+  "price": 0.0
+ },
+ {
+  "itemCode": "A1004003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A100",
+  "itemName": "72*72*8 SPRIN HYE",
+  "price": 0.0
+ },
+ {
+  "itemCode": "A2001001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*20-10 HEVY",
+  "price": 22900.0
+ },
+ {
+  "itemCode": "A2001002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*20-10 NORMAL",
+  "price": 18900.0
+ },
+ {
+  "itemCode": "A2001003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*20-12 HEVY",
+  "price": 25500.0
+ },
+ {
+  "itemCode": "A2001004",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*20-12 NORMAL",
+  "price": 20900.0
+ },
+ {
+  "itemCode": "A2002001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*27-10 HEVY",
+  "price": 26500.0
+ },
+ {
+  "itemCode": "A2002002",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*27-10 NORMAL",
+  "price": 20900.0
+ },
+ {
+  "itemCode": "A2002003",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*27-12 HEVY",
+  "price": 28900.0
+ },
+ {
+  "itemCode": "A2002004",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A200",
+  "itemName": "20*27-12 NORMAL",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "A3001001",
+  "category": "A - Beds, Mattresses & Pillows",
+  "subCategory": "A300",
+  "itemName": "PILOW NEOLONE",
+  "price": 1650.0
+ },
+ {
+  "itemCode": "E1002002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E100",
+  "itemName": "43\" TV SMART",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E1002003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E100",
+  "itemName": "24\" TV",
+  "price": 49500.0
+ },
+ {
+  "itemCode": "E2003001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "GAS COOKER ORIN STEEL",
+  "price": 7900.0
+ },
+ {
+  "itemCode": "E2003002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "GAS COOKER ORIN GLASTOP",
+  "price": 9900.0
+ },
+ {
+  "itemCode": "E2003003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "MITSU GASCOOKER",
+  "price": 13900.0
+ },
+ {
+  "itemCode": "E2003004",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "GAS COOKER SUJITH",
+  "price": 14900.0
+ },
+ {
+  "itemCode": "E2004001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "HEATER JUG KETTLE",
+  "price": 4900.0
+ },
+ {
+  "itemCode": "E2007001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "TOASTER",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E2007002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "RANGE OVEN 30L 2KG",
+  "price": 29900.0
+ },
+ {
+  "itemCode": "E2007003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "AMILEX 30L 2KG",
+  "price": 29900.0
+ },
+ {
+  "itemCode": "E2007004",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "AMILEX OVEN 25L",
+  "price": 25900.0
+ },
+ {
+  "itemCode": "E2007005",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "RANGE OVEN 70L 4KG",
+  "price": 43500.0
+ },
+ {
+  "itemCode": "E2007006",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "NATIONAL OVEN 32L",
+  "price": 32500.0
+ },
+ {
+  "itemCode": "E2008001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "PRUSER COOKER 7.5L",
+  "price": 10900.0
+ },
+ {
+  "itemCode": "E2008002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "PRUSER COOKER 5L",
+  "price": 8900.0
+ },
+ {
+  "itemCode": "E2009001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E200",
+  "itemName": "REFREGETOR 180L",
+  "price": 139500.0
+ },
+ {
+  "itemCode": "E3001002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "INNOVEX STAND FAN 16",
+  "price": 19900.0
+ },
+ {
+  "itemCode": "E3001003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "INNOVEX STAND FAN 18",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "E3001004",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "SAICON STAND FAN",
+  "price": 9900.0
+ },
+ {
+  "itemCode": "E3002001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "RICH POWER WALL FAN",
+  "price": 13900.0
+ },
+ {
+  "itemCode": "E3002002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "RICHPOWER REMOTE WALL FAN",
+  "price": 14900.0
+ },
+ {
+  "itemCode": "E3002003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "RANGE TABLE FAN",
+  "price": 11500.0
+ },
+ {
+  "itemCode": "E3002004",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "HAWALS CYVILIM FAN",
+  "price": 18900.0
+ },
+ {
+  "itemCode": "E3002005",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "ION STAND FAN",
+  "price": 12900.0
+ },
+ {
+  "itemCode": "E3003001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "RECORN IORN",
+  "price": 6900.0
+ },
+ {
+  "itemCode": "E3003002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "BAJAJ IORN",
+  "price": 7900.0
+ },
+ {
+  "itemCode": "E3003003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "KAWASI IORN",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E3003004",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E300",
+  "itemName": "INNOVEX IORN",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E4001001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E400",
+  "itemName": "WATER PUMP 0.5HP",
+  "price": 74900.0
+ },
+ {
+  "itemCode": "E4001002",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E400",
+  "itemName": "WATER PUMP 0.75HP",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E4001003",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E400",
+  "itemName": "WATER PUMP 1HP",
+  "price": 0.0
+ },
+ {
+  "itemCode": "E4002001",
+  "category": "E - Electrical Appliances & Fans",
+  "subCategory": "E400",
+  "itemName": "INNOVEX GEESER",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M1001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "3D FULL SET MIRRO",
+  "price": 58500.0
+ },
+ {
+  "itemCode": "M1001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "3D FULL SET",
+  "price": 57900.0
+ },
+ {
+  "itemCode": "M1001003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "3D NORMAL",
+  "price": 56500.0
+ },
+ {
+  "itemCode": "M1001004",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "2D FULL SET",
+  "price": 43500.0
+ },
+ {
+  "itemCode": "M1001005",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "2D NORMAL",
+  "price": 39500.0
+ },
+ {
+  "itemCode": "M1001006",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "2D 6*4 MIRRO",
+  "price": 34500.0
+ },
+ {
+  "itemCode": "M1001007",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "2D 6*4 NORMAL",
+  "price": 32500.0
+ },
+ {
+  "itemCode": "M1002001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BEBY CUPBORD WITH MIRRO",
+  "price": 22500.0
+ },
+ {
+  "itemCode": "M1002002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BEBY CUPBORD 5*3 5D",
+  "price": 22900.0
+ },
+ {
+  "itemCode": "M1002003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BABY ALMARI 5*3",
+  "price": 17500.0
+ },
+ {
+  "itemCode": "M1002004",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK RACK 6*3",
+  "price": 29900.0
+ },
+ {
+  "itemCode": "M1002005",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK RACK 4*3",
+  "price": 22900.0
+ },
+ {
+  "itemCode": "M1002006",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK RACK 5*1 HALF DOOR",
+  "price": 17500.0
+ },
+ {
+  "itemCode": "M1002007",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK CUPBORD 6*3",
+  "price": 39900.0
+ },
+ {
+  "itemCode": "M1002008",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK CUPBORD HALF DOOR 6*3",
+  "price": 34900.0
+ },
+ {
+  "itemCode": "M1002009",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "BOOK CUPBORD 4*3",
+  "price": 27500.0
+ },
+ {
+  "itemCode": "M1002010",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "PHOTO STAND",
+  "price": 11500.0
+ },
+ {
+  "itemCode": "M1002011",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "LOKER 3 CUPBORD",
+  "price": 17900.0
+ },
+ {
+  "itemCode": "M1002012",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M100",
+  "itemName": "LOKER 4 CUPBORD",
+  "price": 20500.0
+ },
+ {
+  "itemCode": "M2001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M200",
+  "itemName": "WRITING TABLE 4*2",
+  "price": 19900.0
+ },
+ {
+  "itemCode": "M2001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M200",
+  "itemName": "WRITING TABLE 1.5* 2.5*",
+  "price": 13900.0
+ },
+ {
+  "itemCode": "M2002001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M200",
+  "itemName": "STADY TABLE 4*2",
+  "price": 28900.0
+ },
+ {
+  "itemCode": "M2003001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M200",
+  "itemName": "WRITING TABLE WITH RACK 4*2",
+  "price": 29900.0
+ },
+ {
+  "itemCode": "M2004001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M200",
+  "itemName": "SIDE CUPBORD WITH RACK TABL",
+  "price": 29500.0
+ },
+ {
+  "itemCode": "M3001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M300",
+  "itemName": "AVR 36",
+  "price": 11500.0
+ },
+ {
+  "itemCode": "M3001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M300",
+  "itemName": "AVR 56",
+  "price": 33900.0
+ },
+ {
+  "itemCode": "M3001003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M300",
+  "itemName": "WU 01",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "M3001004",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M300",
+  "itemName": "WU 06",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "M3001005",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M300",
+  "itemName": "HM TV STAND",
+  "price": 29500.0
+ },
+ {
+  "itemCode": "M4001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M400",
+  "itemName": "CT 16",
+  "price": 11900.0
+ },
+ {
+  "itemCode": "M4001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M400",
+  "itemName": "CT 68",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M5001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M500",
+  "itemName": "3D 9MM OC CUPBORD",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M5001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M500",
+  "itemName": "2D 9MM OC CUPBORD",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M5002001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M500",
+  "itemName": "3D 15MM OC CUPBORD",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M5002002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M500",
+  "itemName": "2D 15MM OC CUPBORD",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M6001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "HM DRESING TABLE SIDE RACK",
+  "price": 20900.0
+ },
+ {
+  "itemCode": "M6001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "SAARI DRESING TABLE",
+  "price": 52500.0
+ },
+ {
+  "itemCode": "M6001003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "UNISONIC SIDE RACK DRESING T",
+  "price": 35000.0
+ },
+ {
+  "itemCode": "M6001004",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "UNISONIC DRESING TABLE",
+  "price": 26500.0
+ },
+ {
+  "itemCode": "M6001005",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "MDF DRESING TABLE",
+  "price": 10500.0
+ },
+ {
+  "itemCode": "M6001006",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M600",
+  "itemName": "MELAMIN SMALE DRESING TABL",
+  "price": 13900.0
+ },
+ {
+  "itemCode": "M7001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M700",
+  "itemName": "BABY DESK WITH RACK MELAMIN",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M7001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M700",
+  "itemName": "BABY DESK WITH DROWER",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M7002001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M700",
+  "itemName": "MDF BABY DESK",
+  "price": 19900.0
+ },
+ {
+  "itemCode": "M7002003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M700",
+  "itemName": "BABY DESK SEMI",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M8001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M800",
+  "itemName": "HM STUL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M8001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M800",
+  "itemName": "UNISONIC COFFI STUL",
+  "price": 12900.0
+ },
+ {
+  "itemCode": "M8001003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M800",
+  "itemName": "COFFI TABLE WITH FORE HUMTY",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M9001001",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M900",
+  "itemName": "IORN CUPBORD",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M9001002",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M900",
+  "itemName": "IORN CUPBORD WITH WEEL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "M9001003",
+  "category": "M - Wooden & MDF Furniture",
+  "subCategory": "M900",
+  "itemName": "IORN CUP BORD WITH SHOE RAC",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NILKAMAL GARDN",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "PHOENIX OSTORIUM",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001003",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NIPPON BLOOM",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001004",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "PHOENIX COMPORT",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001005",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "PHOENIX OLIVIYA",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1001006",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "PHOENIX SMOLLE CHAIR",
+  "price": 13900.0
+ },
+ {
+  "itemCode": "P1002001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "KINGS STAR DYNIN CHAIR",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1002002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NIPPON DYNING CHAIR",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1003001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "PIYESTRA DYNING TABLE POT3",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1003002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NIPPON MEGA TABLE",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1003003",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NIPPON OVEL TABLE",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1003004",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "KINGS STAR DYNIN TABLE",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1004001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "NIPPON STUL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P1004002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P100",
+  "itemName": "BAR STUL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P2001001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P200",
+  "itemName": "DOWER 6D DAXER",
+  "price": 15900.0
+ },
+ {
+  "itemCode": "P2001002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P200",
+  "itemName": "DOWER 4D DAXER",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P2002001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P200",
+  "itemName": "PANTRY CUBBED G",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P2002002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P200",
+  "itemName": "PANTRY CUBBED NORMAL",
+  "price": 4750.0
+ },
+ {
+  "itemCode": "P2003001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P200",
+  "itemName": "PLATE RACK WITH COVER DAXER",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P3001001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P300",
+  "itemName": "DAXER DOOR WITH GLASS",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P3001002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P300",
+  "itemName": "DAXER DOOR WITH NORMAL",
+  "price": 0.0
+ },
+ {
+  "itemCode": "P3002001",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P300",
+  "itemName": "WATER TANK 500L",
+  "price": 11500.0
+ },
+ {
+  "itemCode": "P3002002",
+  "category": "P - Plastic Items & Water Tanks",
+  "subCategory": "P300",
+  "itemName": "WATER TANK 1000L",
+  "price": 27500.0
+ },
+ {
+  "itemCode": "S1001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S100",
+  "itemName": "ZINCORTED ALMARI 6*4",
+  "price": 0.0
+ },
+ {
+  "itemCode": "S1001002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S100",
+  "itemName": "STIL ALMARI 6*4",
+  "price": 0.0
+ },
+ {
+  "itemCode": "S1001003",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S100",
+  "itemName": "STIL ALMARI 4*3",
+  "price": 0.0
+ },
+ {
+  "itemCode": "S1001004",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S100",
+  "itemName": "STIL ALMARI 5*25",
+  "price": 0.0
+ },
+ {
+  "itemCode": "S2001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S200",
+  "itemName": "GASS WHITH PLAT RACK",
+  "price": 7900.0
+ },
+ {
+  "itemCode": "S2001002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S200",
+  "itemName": "GAS RACK",
+  "price": 6900.0
+ },
+ {
+  "itemCode": "S2002001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S200",
+  "itemName": "IRON TABLE",
+  "price": 4900.0
+ },
+ {
+  "itemCode": "S2002002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S200",
+  "itemName": "TRAVEL RACK",
+  "price": 3900.0
+ },
+ {
+  "itemCode": "S3001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S300",
+  "itemName": "SIL PUTU",
+  "price": 3900.0
+ },
+ {
+  "itemCode": "S4001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S400",
+  "itemName": "LADER ADI 6\"",
+  "price": 15900.0
+ },
+ {
+  "itemCode": "S4001002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S400",
+  "itemName": "LADER ADI 8\"",
+  "price": 19900.0
+ },
+ {
+  "itemCode": "S5001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S500",
+  "itemName": "AS MASTER PLAT RACK",
+  "price": 7900.0
+ },
+ {
+  "itemCode": "S5001002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S500",
+  "itemName": "SUPER PLATE RACK",
+  "price": 6900.0
+ },
+ {
+  "itemCode": "S6001001",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S600",
+  "itemName": "BYCICLE 12",
+  "price": 22900.0
+ },
+ {
+  "itemCode": "S6001002",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S600",
+  "itemName": "BYCICLE 16",
+  "price": 24500.0
+ },
+ {
+  "itemCode": "S6001003",
+  "category": "S - Steel Items, Ladders & Bicycles",
+  "subCategory": "S600",
+  "itemName": "BYCICLE 20",
+  "price": 28900.0
+ },
+ {
+  "itemCode": "W2001003",
+  "category": "W - Teak & Wooden Dining",
+  "subCategory": "W200",
+  "itemName": "TRESING TABLE TEACK SMALL",
+  "price": 36500.0
+ },
+ {
+  "itemCode": "W5001001",
+  "category": "W - Teak & Wooden Dining",
+  "subCategory": "W500",
+  "itemName": "TEACK DINING TABLE GLASS",
+  "price": 59500.0
+ },
+ {
+  "itemCode": "W5001002",
+  "category": "W - Teak & Wooden Dining",
+  "subCategory": "W500",
+  "itemName": "TEACK DINING TABLE WOOD",
+  "price": 69500.0
+ },
+ {
+  "itemCode": "W5001003",
+  "category": "W - Teak & Wooden Dining",
+  "subCategory": "W500",
+  "itemName": "TEACK DINING TABLE T CUP",
+  "price": 68500.0
+ }
+];
+
+/* ===== items ===== */
+const __items = (() => {
+
+let allItems = [];
+let editingId = null;
+let itemsLoaded = false;
+
+function renderItemsModule(section) {
+  section.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Items</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="search-box"><input type="text" id="itemSearch" placeholder="Search by name, code, or category"></div>
+          <button class="btn btn-ghost" id="importBtn">Import catalogue</button>
+          <button class="btn btn-amber" id="addItemBtn">+ Add item</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Code</th><th>Category</th><th>Sub-category</th><th>Item name</th><th class="num">Price</th><th></th></tr>
+          </thead>
+          <tbody id="itemsTableBody"></tbody>
+        </table>
+      </div>
+      <div id="itemsEmpty" class="empty-state hidden">
+        <div class="big">No items yet</div>
+        Add your first item to start building the catalogue.
+      </div>
+    </div>
+  `;
+
+  document.getElementById('addItemBtn').addEventListener('click', () => openItemModal());
+  document.getElementById('importBtn').addEventListener('click', importCatalog);
+  document.getElementById('itemSearch').addEventListener('input', renderTable);
+
+  onSnapshot(query(collection(db, 'items'), orderBy('itemName')), (snap) => {
+    allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    itemsLoaded = true;
+    renderTable();
+  }, (err) => showToast('Could not load items: ' + err.message, 'error'));
+}
+
+function renderTable() {
+  const body = document.getElementById('itemsTableBody');
+  const empty = document.getElementById('itemsEmpty');
+  if (!body) return;
+
+  const term = (document.getElementById('itemSearch')?.value || '').toLowerCase();
+  const rows = allItems.filter(it =>
+    !term ||
+    (it.itemName || '').toLowerCase().includes(term) ||
+    (it.itemCode || '').toLowerCase().includes(term) ||
+    (it.category || '').toLowerCase().includes(term) ||
+    (it.subCategory || '').toLowerCase().includes(term)
+  );
+
+  if (rows.length === 0) {
+    body.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  body.innerHTML = rows.map(it => `
+    <tr>
+      <td><span class="badge badge-teal">${escapeHtml(it.itemCode || '—')}</span></td>
+      <td>${escapeHtml(it.category || '—')}</td>
+      <td>${escapeHtml(it.subCategory || '—')}</td>
+      <td>${escapeHtml(it.itemName || '—')}</td>
+      <td class="num">${fmtMoney(it.price)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" data-edit="${it.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-delete="${it.id}">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+
+  body.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openItemModal(b.dataset.edit)));
+  body.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => confirmDelete(b.dataset.delete)));
+}
+
+function openItemModal(id = null) {
+  editingId = id;
+  const existing = id ? allItems.find(i => i.id === id) : null;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal">
+      <h3>${existing ? 'Edit item' : 'Add item'}</h3>
+      <p class="modal-sub">${existing ? 'Update the details for this item.' : 'Add a new item to the catalogue.'}</p>
+      <div class="field-row">
+        <div class="field"><label>Item code</label><input id="f_itemCode" value="${escapeAttr(existing?.itemCode)}" placeholder="e.g. TV-001"></div>
+        <div class="field"><label>Price (Rs.)</label><input id="f_price" type="number" step="0.01" value="${existing?.price ?? ''}" placeholder="0.00"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Category</label><input id="f_category" value="${escapeAttr(existing?.category)}" placeholder="e.g. Television"></div>
+        <div class="field"><label>Sub-category</label><input id="f_subCategory" value="${escapeAttr(existing?.subCategory)}" placeholder="e.g. LED 43\u2033"></div>
+      </div>
+      <div class="field"><label>Item name</label><input id="f_itemName" value="${escapeAttr(existing?.itemName)}" placeholder="Full display name"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelModal">Cancel</button>
+        <button class="btn btn-primary" id="saveItem">${existing ? 'Save changes' : 'Add item'}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  backdrop.querySelector('#cancelModal').addEventListener('click', () => backdrop.remove());
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+  backdrop.querySelector('#saveItem').addEventListener('click', () => saveItem(backdrop));
+}
+
+async function saveItem(backdrop) {
+  const itemCode = document.getElementById('f_itemCode').value.trim();
+  const price = parseFloat(document.getElementById('f_price').value);
+  const category = document.getElementById('f_category').value.trim();
+  const subCategory = document.getElementById('f_subCategory').value.trim();
+  const itemName = document.getElementById('f_itemName').value.trim();
+
+  if (!itemName || !itemCode || isNaN(price)) {
+    showToast('Item code, name, and price are required.', 'error');
+    return;
+  }
+
+  const payload = { itemCode, category, subCategory, itemName, price };
+
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, 'items', editingId), payload);
+      showToast('Item updated.', 'success');
+    } else {
+      await addDoc(collection(db, 'items'), { ...payload, createdAt: serverTimestamp() });
+      showToast('Item added.', 'success');
+    }
+    backdrop.remove();
+  } catch (err) {
+    showToast('Save failed: ' + err.message, 'error');
+  }
+}
+
+function confirmDelete(id) {
+  const item = allItems.find(i => i.id === id);
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" style="max-width:420px;">
+      <h3>Delete item?</h3>
+      <p class="modal-sub">"${escapeHtml(item?.itemName || '')}" will be removed from the catalogue. This does not affect existing bills or stock records.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelDel">Cancel</button>
+        <button class="btn btn-danger" id="confirmDel">Delete</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+  backdrop.querySelector('#cancelDel').addEventListener('click', () => backdrop.remove());
+  backdrop.querySelector('#confirmDel').addEventListener('click', async () => {
+    try {
+      await deleteDoc(doc(db, 'items', id));
+      showToast('Item deleted.', 'success');
+    } catch (err) {
+      showToast('Delete failed: ' + err.message, 'error');
+    }
+    backdrop.remove();
+  });
+}
+
+// One-click import of the item catalogue (js/catalog-data.js). Items whose code already exists are skipped.
+async function importCatalog() {
+  if (!itemsLoaded) { showToast('Items are still loading - try again in a moment.', 'error'); return; }
+  let CATALOG;
+  try {
+    CATALOG = CATALOG_DATA;
+  } catch (e) {
+    showToast('Catalogue file (js/catalog-data.js) not found.', 'error');
+    return;
+  }
+  const have = new Set(allItems.map(i => (i.itemCode || '').toLowerCase()));
+  const fresh = CATALOG.filter(c => !have.has(c.itemCode.toLowerCase()));
+  const skipped = CATALOG.length - fresh.length;
+  if (fresh.length === 0) { showToast('All catalogue items are already in the system.', 'success'); return; }
+  if (!confirm(`Import ${fresh.length} items?` + (skipped ? ` (${skipped} already exist and will be skipped)` : ''))) return;
+
+  const btn = document.getElementById('importBtn');
+  btn.disabled = true; btn.textContent = 'Importing...';
+  try {
+    for (let i = 0; i < fresh.length; i += 400) {
+      const batch = writeBatch(db);
+      fresh.slice(i, i + 400).forEach(c => {
+        batch.set(doc(collection(db, 'items')), { ...c, createdAt: serverTimestamp() });
+      });
+      await batch.commit();
+    }
+    showToast(`${fresh.length} items imported.`, 'success');
+  } catch (err) {
+    showToast('Import failed: ' + err.message, 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Import catalogue';
+}
+
+function getAllItemsCache() { return allItems; }
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s ?? ''); }
+
+return { renderItemsModule, getAllItemsCache };
+})();
+
+/* ===== stock ===== */
+const __stock = (() => {
+
+const STORES = [
+  { id: 'main', name: 'Main store' },
+  { id: 'vehicle1', name: 'Vehicle 1' },
+  { id: 'vehicle2', name: 'Vehicle 2' },
+  { id: 'vehicle3', name: 'Vehicle 3' },
+];
+
+let itemsCache = [];
+let currentStoreLevels = []; // for overview tab, live
+let currentTab = 'overview';
+
+function renderStockModule(section) {
+  section.innerHTML = `
+    <div class="subtabs">
+      <button class="subtab active" data-tab="overview">Stock overview</button>
+      <button class="subtab" data-tab="transfer">Stock transfer</button>
+      <button class="subtab" data-tab="check">Vehicle stock check</button>
+    </div>
+    <div id="stockTabBody"></div>
+  `;
+
+  section.querySelectorAll('.subtab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      section.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b === btn));
+      currentTab = btn.dataset.tab;
+      renderTabBody();
+    });
+  });
+
+  // keep a live cache of items for dropdowns everywhere in this module
+  onSnapshot(query(collection(db, 'items'), orderBy('itemName')), (snap) => {
+    itemsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (currentTab === 'transfer' || currentTab === 'check') renderTabBody();
+  });
+
+  renderTabBody();
+}
+
+function renderTabBody() {
+  const body = document.getElementById('stockTabBody');
+  if (!body) return;
+  if (currentTab === 'overview') return renderOverview(body);
+  if (currentTab === 'transfer') return renderTransfer(body);
+  if (currentTab === 'check') return renderVehicleCheck(body);
+}
+
+/* ============================================================
+   TAB 1 — Stock overview (per store, with quick opening-stock set)
+   ============================================================ */
+function renderOverview(body) {
+  body.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Stock by store</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <select id="ovStore" style="padding:8px 10px; border:1px solid var(--border); border-radius:6px;">
+          ${STORES.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+        </select>
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-600); cursor:pointer;"><input type="checkbox" id="ovShowAll"> Show items with no stock</label>
+          <button class="btn btn-amber" id="ovSetAll">Set qty for ALL items</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Code</th><th>Item</th><th class="num">Qty</th><th></th></tr></thead>
+          <tbody id="ovBody"></tbody>
+        </table>
+      </div>
+      <div id="ovEmpty" class="empty-state hidden"><div class="big">No stock recorded yet</div>Set opening stock for items in this store below.</div>
+    </div>
+  `;
+
+  const storeSelect = document.getElementById('ovStore');
+  let unsub = null;
+  const load = () => {
+    if (unsub) unsub();
+    unsub = onSnapshot(query(collection(db, 'stockLevels'), where('storeId', '==', storeSelect.value)), (snap) => {
+      currentStoreLevels = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      paintOverview(storeSelect.value);
+    });
+  };
+  storeSelect.addEventListener('change', load);
+  document.getElementById('ovShowAll').addEventListener('change', () => paintOverview(storeSelect.value));
+  document.getElementById('ovSetAll').addEventListener('click', () => {
+    const st = STORES.find(x => x.id === storeSelect.value);
+    setAllStock(st.id, st.name);
+  });
+  load();
+}
+
+function paintOverview(storeId) {
+  const levelsByItem = {};
+  currentStoreLevels.forEach(l => { levelsByItem[l.itemId] = l.qty; });
+
+  const showAll = document.getElementById('ovShowAll')?.checked;
+  const rows = itemsCache
+    .map(it => ({
+      id: it.id, itemCode: it.itemCode, itemName: it.itemName,
+      qty: levelsByItem[it.id] ?? 0,
+    }))
+    .filter(r => showAll || r.qty > 0);
+
+  const tbody = document.getElementById('ovBody');
+  const empty = document.getElementById('ovEmpty');
+  if (!tbody) return;
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    empty.innerHTML = itemsCache.length === 0
+      ? '<div class="big">No items in the catalogue yet</div>Add or import items first.'
+      : '<div class="big">No items with stock in this store</div>Tick "Show items with no stock" to set quantities, or use "Set qty for ALL items".';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><span class="badge badge-teal">${escapeHtml(r.itemCode)}</span></td>
+      <td>${escapeHtml(r.itemName)}</td>
+      <td class="num">${r.qty}</td>
+      <td><button class="btn btn-ghost btn-sm" data-setqty="${r.id}" data-name="${escapeAttr(r.itemName)}" data-qty="${r.qty}">Set qty</button></td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('[data-setqty]').forEach(b => b.addEventListener('click', () => {
+    const val = prompt(`Set stock quantity for "${b.dataset.name}":`, b.dataset.qty);
+    if (val === null) return;
+    const qty = parseInt(val, 10);
+    if (isNaN(qty) || qty < 0) { showToast('Enter a valid quantity.', 'error'); return; }
+    setOpeningStock(storeId, b.dataset.setqty, qty);
+  }));
+}
+
+// Sets the same opening quantity for every item in one store (default 10).
+async function setAllStock(storeId, storeName) {
+  if (itemsCache.length === 0) { showToast('Add or import items first.', 'error'); return; }
+  const val = prompt(`Set the same quantity for ALL ${itemsCache.length} items in ${storeName}:`, '10');
+  if (val === null) return;
+  const qty = parseInt(val, 10);
+  if (isNaN(qty) || qty < 0) { showToast('Enter a valid quantity.', 'error'); return; }
+  if (!confirm(`Set ${qty} units for all ${itemsCache.length} items in ${storeName}? Any existing quantities there will be replaced.`)) return;
+
+  const btn = document.getElementById('ovSetAll');
+  btn.disabled = true; btn.textContent = 'Updating...';
+  try {
+    for (let i = 0; i < itemsCache.length; i += 400) {
+      const batch = writeBatch(db);
+      itemsCache.slice(i, i + 400).forEach(it => {
+        batch.set(doc(db, 'stockLevels', `${storeId}__${it.id}`), {
+          storeId, itemId: it.id, itemCode: it.itemCode || '', itemName: it.itemName || '',
+          qty, updatedAt: serverTimestamp(),
+        }, { merge: true });
+      });
+      await batch.commit();
+    }
+    showToast(`${qty} units set for ${itemsCache.length} items in ${storeName}.`, 'success');
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Set qty for ALL items';
+}
+
+async function setOpeningStock(storeId, itemId, qty) {
+  const item = itemsCache.find(i => i.id === itemId);
+  try {
+    await setDoc(doc(db, 'stockLevels', `${storeId}__${itemId}`), {
+      storeId, itemId, itemCode: item?.itemCode || '', itemName: item?.itemName || '',
+      qty, updatedAt: serverTimestamp(),
+    }, { merge: true });
+    showToast('Stock updated.', 'success');
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error');
+  }
+}
+
+/* ============================================================
+   TAB 2 — Stock transfer (between any two stores)
+   ============================================================ */
+function renderTransfer(body) {
+  body.innerHTML = `
+    <div class="panel">
+      <div class="panel-head"><h2>Transfer stock</h2></div>
+      <div class="field-row">
+        <div class="field"><label>From</label>
+          <select id="trFrom">${STORES.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}</select>
+        </div>
+        <div class="field"><label>To</label>
+          <select id="trTo">${STORES.map((s, i) => `<option value="${s.id}" ${i===1?'selected':''}>${s.name}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Item</label>
+          <select id="trItem">${itemsCache.map(it => `<option value="${it.id}">${escapeHtml(it.itemCode)} — ${escapeHtml(it.itemName)}</option>`).join('')}</select>
+        </div>
+        <div class="field"><label>Quantity</label><input id="trQty" type="number" min="1" placeholder="0"></div>
+      </div>
+      <div class="field"><label>Note (optional)</label><input id="trNote" placeholder="e.g. loading for weekend route"></div>
+      <button class="btn btn-amber" id="trSubmit">Transfer stock</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Recent transfers</h2></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Item</th><th>From</th><th>To</th><th class="num">Qty</th><th>Note</th></tr></thead>
+          <tbody id="trHistory"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('trSubmit').addEventListener('click', submitTransfer);
+
+  onSnapshot(query(collection(db, 'stockTransfers'), orderBy('date', 'desc'), limit(20)), (snap) => {
+    const tbody = document.getElementById('trHistory');
+    if (!tbody) return;
+    const rows = snap.docs.map(d => d.data());
+    tbody.innerHTML = rows.length ? rows.map(r => `
+      <tr>
+        <td>${fmtDate(r.date)}</td>
+        <td>${escapeHtml(r.itemName)}</td>
+        <td>${storeName(r.fromStore)}</td>
+        <td>${storeName(r.toStore)}</td>
+        <td class="num">${r.qty}</td>
+        <td>${escapeHtml(r.note || '—')}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="6" style="text-align:center; color:var(--ink-600); padding:20px;">No transfers yet</td></tr>`;
+  });
+}
+
+async function submitTransfer() {
+  const fromStore = document.getElementById('trFrom').value;
+  const toStore = document.getElementById('trTo').value;
+  const itemId = document.getElementById('trItem').value;
+  const qty = parseInt(document.getElementById('trQty').value, 10);
+  const note = document.getElementById('trNote').value.trim();
+
+  if (fromStore === toStore) { showToast('From and to stores must be different.', 'error'); return; }
+  if (!itemId || isNaN(qty) || qty <= 0) { showToast('Select an item and a valid quantity.', 'error'); return; }
+
+  const item = itemsCache.find(i => i.id === itemId);
+  const fromRef = doc(db, 'stockLevels', `${fromStore}__${itemId}`);
+  const toRef = doc(db, 'stockLevels', `${toStore}__${itemId}`);
+
+  try {
+    await runTransaction(db, async (tx) => {
+      const fromSnap = await tx.get(fromRef);
+      const fromQty = fromSnap.exists() ? (fromSnap.data().qty || 0) : 0;
+      if (fromQty < qty) throw new Error(`Only ${fromQty} units available in ${storeName(fromStore)}.`);
+      const toSnap = await tx.get(toRef);
+      const toQty = toSnap.exists() ? (toSnap.data().qty || 0) : 0;
+
+      tx.set(fromRef, { storeId: fromStore, itemId, itemCode: item?.itemCode || '', itemName: item?.itemName || '', qty: fromQty - qty, updatedAt: serverTimestamp() }, { merge: true });
+      tx.set(toRef, { storeId: toStore, itemId, itemCode: item?.itemCode || '', itemName: item?.itemName || '', qty: toQty + qty, updatedAt: serverTimestamp() }, { merge: true });
+    });
+
+    await addDoc(collection(db, 'stockTransfers'), {
+      fromStore, toStore, itemId, itemCode: item?.itemCode || '', itemName: item?.itemName || '',
+      qty, note, date: serverTimestamp(),
+    });
+
+    showToast('Stock transferred.', 'success');
+    document.getElementById('trQty').value = '';
+    document.getElementById('trNote').value = '';
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+}
+
+function storeName(id) { return STORES.find(s => s.id === id)?.name || id; }
+
+/* ============================================================
+   TAB 3 — Vehicle stock check
+   Loads the currently-expected stock for a vehicle, lets the
+   user enter actual counted quantities, and separately record
+   items found that were not in the expected (loaded) list —
+   e.g. a returned item that was never updated in the system.
+   ============================================================ */
+let checkExpected = [];   // [{itemId, itemCode, itemName, expectedQty, actualQty}]
+let checkExtras = [];     // [{itemId, itemCode, itemName, qty, note}]
+
+function renderVehicleCheck(body) {
+  const vehicles = STORES.filter(s => s.id !== 'main');
+  body.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Vehicle stock check</h2>
+        <select id="vcVehicle" style="padding:8px 10px; border:1px solid var(--border); border-radius:6px;">
+          <option value="">Select a vehicle…</option>
+          ${vehicles.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+        </select>
+      </div>
+      <div id="vcContent"><p style="color:var(--ink-600); font-size:13.5px;">Select a vehicle to load its expected stock and begin the check.</p></div>
+    </div>
+  `;
+  document.getElementById('vcVehicle').addEventListener('change', loadVehicleCheck);
+}
+
+async function loadVehicleCheck() {
+  const vehicle = document.getElementById('vcVehicle').value;
+  const content = document.getElementById('vcContent');
+  checkExtras = [];
+  if (!vehicle) { content.innerHTML = ''; return; }
+
+  content.innerHTML = `<p style="color:var(--ink-600); font-size:13.5px;">Loading expected stock…</p>`;
+
+  const snap = await getDocs(query(collection(db, 'stockLevels'), where('storeId', '==', vehicle)));
+  checkExpected = snap.docs.map(d => ({
+    itemId: d.data().itemId, itemCode: d.data().itemCode, itemName: d.data().itemName,
+    expectedQty: d.data().qty || 0, actualQty: null,
+  })).filter(r => r.expectedQty > 0);
+
+  paintVehicleCheck(vehicle);
+}
+
+function paintVehicleCheck(vehicle) {
+  const content = document.getElementById('vcContent');
+  const availableExtra = itemsCache.filter(it => !checkExpected.some(e => e.itemId === it.id));
+
+  content.innerHTML = `
+    ${checkExpected.length === 0 ? `<p style="color:var(--ink-600); font-size:13.5px; margin-bottom:16px;">No stock currently loaded for this vehicle in the system.</p>` : `
+    <div class="table-wrap" style="margin-bottom:18px;">
+      <table class="data-table">
+        <thead><tr><th>Code</th><th>Item</th><th class="num">Expected</th><th class="num">Actual (counted)</th><th class="num">Diff</th></tr></thead>
+        <tbody id="vcExpectedBody">
+          ${checkExpected.map((r, i) => `
+            <tr>
+              <td><span class="badge badge-teal">${escapeHtml(r.itemCode)}</span></td>
+              <td>${escapeHtml(r.itemName)}</td>
+              <td class="num">${r.expectedQty}</td>
+              <td class="num"><input type="number" min="0" style="width:80px; text-align:right; padding:6px 8px; border:1px solid var(--border); border-radius:6px;" data-actual="${i}"></td>
+              <td class="num" id="vcDiff${i}">—</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`}
+
+    <div class="panel" style="background:var(--bg); border-style:dashed;">
+      <div class="panel-head"><h2 style="font-size:14px;">Found item not in the expected list</h2></div>
+      <p style="color:var(--ink-600); font-size:12.5px; margin-top:-8px; margin-bottom:12px;">Use this for items physically found in the vehicle that the system doesn't show as loaded — e.g. a return that was never updated.</p>
+      <div class="field-row">
+        <div class="field"><label>Item</label>
+          <select id="vcExtraItem">
+            <option value="">Select item…</option>
+            ${availableExtra.map(it => `<option value="${it.id}">${escapeHtml(it.itemCode)} — ${escapeHtml(it.itemName)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Quantity found</label><input id="vcExtraQty" type="number" min="1"></div>
+      </div>
+      <div class="field"><label>Note</label><input id="vcExtraNote" placeholder="e.g. return item, not updated in system"></div>
+      <button class="btn btn-ghost btn-sm" id="vcAddExtra">+ Add to check</button>
+      <div id="vcExtraList" style="margin-top:14px;"></div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <button class="btn btn-amber" id="vcSave">Save stock check</button>
+    </div>
+  `;
+
+  content.querySelectorAll('[data-actual]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const i = parseInt(inp.dataset.actual, 10);
+      const val = inp.value === '' ? null : parseInt(inp.value, 10);
+      checkExpected[i].actualQty = val;
+      const diffCell = document.getElementById(`vcDiff${i}`);
+      if (val === null || isNaN(val)) { diffCell.textContent = '—'; diffCell.className = 'num'; return; }
+      const diff = val - checkExpected[i].expectedQty;
+      diffCell.textContent = diff === 0 ? 'Match' : (diff > 0 ? `+${diff}` : diff);
+      diffCell.className = 'num ' + (diff === 0 ? 'qty-diff-ok' : 'qty-diff-bad');
+    });
+  });
+
+  document.getElementById('vcAddExtra').addEventListener('click', () => {
+    const itemId = document.getElementById('vcExtraItem').value;
+    const qty = parseInt(document.getElementById('vcExtraQty').value, 10);
+    const note = document.getElementById('vcExtraNote').value.trim();
+    if (!itemId || isNaN(qty) || qty <= 0) { showToast('Select an item and a valid quantity.', 'error'); return; }
+    const item = itemsCache.find(it => it.id === itemId);
+    checkExtras.push({ itemId, itemCode: item.itemCode, itemName: item.itemName, qty, note });
+    document.getElementById('vcExtraQty').value = '';
+    document.getElementById('vcExtraNote').value = '';
+    paintVehicleCheck(vehicle); // refresh available-item dropdown + extras list
+  });
+
+  document.getElementById('vcSave').addEventListener('click', () => saveVehicleCheck(vehicle));
+  paintExtraList();
+}
+
+function paintExtraList() {
+  const el = document.getElementById('vcExtraList');
+  if (!el) return;
+  if (checkExtras.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = checkExtras.map((e, i) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px;">
+      <span><span class="badge badge-amber">${escapeHtml(e.itemCode)}</span> ${escapeHtml(e.itemName)} × ${e.qty} ${e.note ? `— <span style="color:var(--ink-600);">${escapeHtml(e.note)}</span>` : ''}</span>
+      <button class="btn btn-ghost btn-sm" data-removeextra="${i}">Remove</button>
+    </div>
+  `).join('');
+  el.querySelectorAll('[data-removeextra]').forEach(b => b.addEventListener('click', () => {
+    checkExtras.splice(parseInt(b.dataset.removeextra, 10), 1);
+    paintExtraList();
+  }));
+}
+
+async function saveVehicleCheck(vehicle) {
+  const counted = checkExpected.filter(r => r.actualQty !== null && !isNaN(r.actualQty));
+  if (counted.length === 0 && checkExtras.length === 0) {
+    showToast('Enter at least one counted quantity or an extra item found.', 'error');
+    return;
+  }
+
+  try {
+    // Reconcile counted items: set system stock to the actual counted quantity
+    for (const r of counted) {
+      await setDoc(doc(db, 'stockLevels', `${vehicle}__${r.itemId}`), {
+        storeId: vehicle, itemId: r.itemId, itemCode: r.itemCode, itemName: r.itemName,
+        qty: r.actualQty, updatedAt: serverTimestamp(),
+      }, { merge: true });
+    }
+    // Add extra found items into system stock
+    for (const e of checkExtras) {
+      const ref = doc(db, 'stockLevels', `${vehicle}__${e.itemId}`);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        const existingQty = snap.exists() ? (snap.data().qty || 0) : 0;
+        tx.set(ref, {
+          storeId: vehicle, itemId: e.itemId, itemCode: e.itemCode, itemName: e.itemName,
+          qty: existingQty + e.qty, updatedAt: serverTimestamp(),
+        }, { merge: true });
+      });
+    }
+
+    await addDoc(collection(db, 'stockChecks'), {
+      vehicle,
+      date: serverTimestamp(),
+      results: counted.map(r => ({ itemId: r.itemId, itemCode: r.itemCode, itemName: r.itemName, expectedQty: r.expectedQty, actualQty: r.actualQty, diff: r.actualQty - r.expectedQty })),
+      extraItemsFound: checkExtras,
+    });
+
+    showToast('Stock check saved.', 'success');
+    checkExtras = [];
+    loadVehicleCheck();
+  } catch (err) {
+    showToast('Failed to save check: ' + err.message, 'error');
+  }
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s ?? ''); }
+
+return { renderStockModule };
+})();
+
+/* ===== customers ===== */
+const __customers = (() => {
+
+let allCustomers = [];
+let customersLoaded = false;
+let editingId = null;
+let saving = false;
+
+/* ---------- Module screen ---------- */
+function renderCustomersModule(section) {
+  section.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Customers <span id="custCount" style="font-size:13px; font-weight:400; color:var(--ink-600);"></span></h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="search-box"><input type="text" id="custSearch" placeholder="Search name, code, NIC, phone, address"></div>
+          <button class="btn btn-ghost" id="custCsvBtn">Download report (CSV)</button>
+          <button class="btn btn-ghost" id="custPrintBtn">Print report</button>
+          <button class="btn btn-amber" id="addCustBtn">+ Add customer</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Code</th><th>Name</th><th>Gender</th><th>NIC / ID</th><th>Phone</th>
+              <th>WhatsApp</th><th>Address</th><th>Road</th><th>Location</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="custTableBody"></tbody>
+        </table>
+      </div>
+      <div id="custEmpty" class="empty-state hidden">
+        <div class="big">No customers yet</div>
+        Add your first customer. A customer code is generated automatically.
+      </div>
+    </div>
+  `;
+
+  document.getElementById('addCustBtn').addEventListener('click', () => openCustomerModal());
+  document.getElementById('custSearch').addEventListener('input', renderTable);
+  document.getElementById('custCsvBtn').addEventListener('click', downloadCsv);
+  document.getElementById('custPrintBtn').addEventListener('click', printReport);
+
+  onSnapshot(query(collection(db, 'customers'), orderBy('customerCode', 'desc')), (snap) => {
+    allCustomers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    customersLoaded = true;
+    renderTable();
+  }, (err) => showToast('Could not load customers: ' + err.message, 'error'));
+}
+
+/* ---------- Helpers ---------- */
+function filteredRows() {
+  const term = (document.getElementById('custSearch')?.value || '').trim().toLowerCase();
+  if (!term) return allCustomers;
+  return allCustomers.filter(c =>
+    [c.customerCode, c.name, c.nic, c.phone, c.whatsapp, c.address, c.road]
+      .some(v => String(v || '').toLowerCase().includes(term))
+  );
+}
+
+// Sri Lankan number -> wa.me format (0788769011 -> 94788769011)
+function waNumber(raw) {
+  let d = String(raw || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.startsWith('00')) d = d.slice(2);
+  if (d.startsWith('0')) d = '94' + d.slice(1);
+  return d;
+}
+
+function mapsUrl(c) {
+  return `https://www.google.com/maps?q=${c.latitude},${c.longitude}`;
+}
+
+function hasLocation(c) {
+  return typeof c.latitude === 'number' && typeof c.longitude === 'number';
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+}
+function escapeAttr(s) { return escapeHtml(s ?? ''); }
+
+/* ---------- Table ---------- */
+function renderTable() {
+  const body = document.getElementById('custTableBody');
+  const empty = document.getElementById('custEmpty');
+  const count = document.getElementById('custCount');
+  if (!body) return;
+
+  const rows = filteredRows();
+  count.textContent = `(${rows.length}${rows.length !== allCustomers.length ? ' of ' + allCustomers.length : ''})`;
+
+  if (rows.length === 0) {
+    body.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  body.innerHTML = rows.map(c => {
+    const wa = waNumber(c.whatsapp);
+    return `
+      <tr>
+        <td><span class="badge badge-teal">${escapeHtml(c.customerCode || '—')}</span></td>
+        <td>${escapeHtml(c.name || '—')}</td>
+        <td>${escapeHtml(c.gender || '—')}</td>
+        <td>${escapeHtml(c.nic || '—')}</td>
+        <td>${escapeHtml(c.phone || '—')}</td>
+        <td>${wa
+          ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener" style="color:var(--teal-700);">${escapeHtml(c.whatsapp)}</a>`
+          : '—'}</td>
+        <td>${escapeHtml(c.address || '—')}</td>
+        <td>${escapeHtml(c.road || '—')}</td>
+        <td>${hasLocation(c)
+          ? `<a href="${mapsUrl(c)}" target="_blank" rel="noopener" style="color:var(--teal-700);">View map</a>`
+          : '—'}</td>
+        <td style="white-space:nowrap;">
+          <button class="btn btn-ghost btn-sm" data-edit="${c.id}">Edit</button>
+          <button class="btn btn-danger btn-sm" data-delete="${c.id}">Delete</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  body.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openCustomerModal(b.dataset.edit)));
+  body.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => confirmDelete(b.dataset.delete)));
+}
+
+/* ---------- Add / edit ---------- */
+function openCustomerModal(id = null) {
+  editingId = id;
+  const c = id ? allCustomers.find(x => x.id === id) : null;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" style="max-height:92vh; overflow-y:auto;">
+      <h3>${c ? 'Edit customer' : 'Add customer'}</h3>
+      <p class="modal-sub">${c ? 'Customer code: <strong>' + escapeHtml(c.customerCode) + '</strong>' : 'A customer code is generated automatically when you save.'}</p>
+
+      <div class="field-row">
+        <div class="field"><label>Name *</label><input id="c_name" value="${escapeAttr(c?.name)}" placeholder="Full name"></div>
+        <div class="field"><label>Gender</label>
+          <select id="c_gender">
+            <option value="">Select</option>
+            <option value="Male" ${c?.gender === 'Male' ? 'selected' : ''}>Male</option>
+            <option value="Female" ${c?.gender === 'Female' ? 'selected' : ''}>Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label>NIC / ID number</label><input id="c_nic" value="${escapeAttr(c?.nic)}" placeholder="e.g. 199012345678"></div>
+        <div class="field"><label>Phone *</label><input id="c_phone" type="tel" value="${escapeAttr(c?.phone)}" placeholder="07XXXXXXXX"></div>
+      </div>
+
+      <div class="field">
+        <label>WhatsApp number</label>
+        <input id="c_whatsapp" type="tel" value="${escapeAttr(c?.whatsapp)}" placeholder="07XXXXXXXX">
+        <label style="margin-top:6px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="c_waSame" style="width:auto;"> Same as phone
+        </label>
+      </div>
+
+      <div class="field"><label>Address</label><input id="c_address" value="${escapeAttr(c?.address)}" placeholder="House no., village / town"></div>
+      <div class="field"><label>Road</label><input id="c_road" value="${escapeAttr(c?.road)}" placeholder="Road / route name"></div>
+
+      <div class="field">
+        <label>Location</label>
+        <div class="field-row">
+          <input id="c_lat" type="number" step="any" value="${c && hasLocation(c) ? c.latitude : ''}" placeholder="Latitude">
+          <input id="c_lng" type="number" step="any" value="${c && hasLocation(c) ? c.longitude : ''}" placeholder="Longitude">
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-ghost btn-sm" id="c_getLoc">Use my current location</button>
+          <a id="c_mapLink" class="btn btn-ghost btn-sm hidden" target="_blank" rel="noopener">Open in Maps</a>
+        </div>
+        <div style="font-size:12px; color:var(--ink-600); margin-top:6px;">Stand at the customer's home and tap "Use my current location" to record it.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="c_cancel">Cancel</button>
+        <button class="btn btn-primary" id="c_save">${c ? 'Save changes' : 'Add customer'}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+
+  const $ = (sel) => backdrop.querySelector(sel);
+  const latEl = $('#c_lat'), lngEl = $('#c_lng'), mapLink = $('#c_mapLink');
+
+  const refreshMapLink = () => {
+    const lat = parseFloat(latEl.value), lng = parseFloat(lngEl.value);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      mapLink.href = `https://www.google.com/maps?q=${lat},${lng}`;
+      mapLink.classList.remove('hidden');
+    } else {
+      mapLink.classList.add('hidden');
+    }
+  };
+  refreshMapLink();
+  latEl.addEventListener('input', refreshMapLink);
+  lngEl.addEventListener('input', refreshMapLink);
+
+  $('#c_waSame').addEventListener('change', (e) => {
+    if (e.target.checked) $('#c_whatsapp').value = $('#c_phone').value;
+  });
+
+  $('#c_getLoc').addEventListener('click', () => {
+    if (!navigator.geolocation) { showToast('This browser cannot get your location.', 'error'); return; }
+    showToast('Getting location...');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        latEl.value = pos.coords.latitude.toFixed(6);
+        lngEl.value = pos.coords.longitude.toFixed(6);
+        refreshMapLink();
+        showToast('Location captured (accuracy about ' + Math.round(pos.coords.accuracy) + ' m).', 'success');
+      },
+      (err) => showToast('Could not get location: ' + err.message, 'error'),
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  });
+
+  $('#c_cancel').addEventListener('click', () => backdrop.remove());
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+  $('#c_save').addEventListener('click', () => saveCustomer(backdrop));
+}
+
+async function saveCustomer(backdrop) {
+  if (saving) return;
+  const val = (id) => backdrop.querySelector('#' + id).value.trim();
+
+  const name = val('c_name');
+  const phone = val('c_phone');
+  if (!name || !phone) { showToast('Name and phone are required.', 'error'); return; }
+
+  const lat = parseFloat(val('c_lat'));
+  const lng = parseFloat(val('c_lng'));
+  const payload = {
+    name,
+    gender: val('c_gender'),
+    nic: val('c_nic'),
+    phone,
+    whatsapp: val('c_whatsapp'),
+    address: val('c_address'),
+    road: val('c_road'),
+    latitude: isNaN(lat) ? null : lat,
+    longitude: isNaN(lng) ? null : lng,
+  };
+
+  if (!customersLoaded) { showToast('Customers are still loading - try again in a moment.', 'error'); return; }
+
+  // Duplicate checks (ignore the customer being edited)
+  const others = allCustomers.filter(x => x.id !== editingId);
+  if (payload.nic) {
+    const dup = others.find(x => (x.nic || '').toLowerCase() === payload.nic.toLowerCase());
+    if (dup) { showToast(`NIC already exists for ${dup.name} (${dup.customerCode}).`, 'error'); return; }
+  }
+  const dupPhone = others.find(x => (x.phone || '') === payload.phone);
+  if (dupPhone && !confirm(`Phone number already used by ${dupPhone.name} (${dupPhone.customerCode}). Save anyway?`)) return;
+
+  const saveBtn = backdrop.querySelector('#c_save');
+  saving = true; saveBtn.disabled = true;
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, 'customers', editingId), { ...payload, updatedAt: serverTimestamp() });
+      showToast('Customer updated.', 'success');
+    } else {
+      const code = await createCustomer(payload);
+      showToast(`Customer added - code ${code}.`, 'success');
+    }
+    backdrop.remove();
+  } catch (err) {
+    showToast('Save failed: ' + err.message, 'error');
+    saveBtn.disabled = false;
+  } finally {
+    saving = false;
+  }
+}
+
+// Atomically bumps the counter and creates the customer, so codes never repeat.
+async function createCustomer(payload) {
+  const counterRef = doc(db, 'counters', 'customers');
+  const newRef = doc(collection(db, 'customers'));
+  return runTransaction(db, async (tx) => {
+    const snap = await tx.get(counterRef);
+    const next = (snap.exists() ? (snap.data().last || 0) : 0) + 1;
+    const customerCode = 'C' + String(next).padStart(5, '0');
+    tx.set(counterRef, { last: next });
+    tx.set(newRef, { ...payload, customerCode, createdAt: serverTimestamp() });
+    return customerCode;
+  });
+}
+
+/* ---------- Delete ---------- */
+function confirmDelete(id) {
+  const c = allCustomers.find(x => x.id === id);
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" style="max-width:420px;">
+      <h3>Delete customer?</h3>
+      <p class="modal-sub">"${escapeHtml(c?.name || '')}" (${escapeHtml(c?.customerCode || '')}) will be removed. This cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelDel">Cancel</button>
+        <button class="btn btn-danger" id="confirmDel">Delete</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+  backdrop.querySelector('#cancelDel').addEventListener('click', () => backdrop.remove());
+  backdrop.querySelector('#confirmDel').addEventListener('click', async () => {
+    try {
+      await deleteDoc(doc(db, 'customers', id));
+      showToast('Customer deleted.', 'success');
+    } catch (err) {
+      showToast('Delete failed: ' + err.message, 'error');
+    }
+    backdrop.remove();
+  });
+}
+
+/* ---------- Customer report (CSV + print) ---------- */
+const REPORT_COLS = [
+  ['Code', c => c.customerCode], ['Name', c => c.name], ['Gender', c => c.gender],
+  ['NIC / ID', c => c.nic], ['Phone', c => c.phone], ['WhatsApp', c => c.whatsapp],
+  ['Address', c => c.address], ['Road', c => c.road],
+  ['Latitude', c => hasLocation(c) ? c.latitude : ''], ['Longitude', c => hasLocation(c) ? c.longitude : ''],
+  ['Added on', c => (c.createdAt ? fmtDate(c.createdAt) : '')],
+];
+
+function downloadCsv() {
+  const rows = filteredRows();
+  if (rows.length === 0) { showToast('No customers to export.', 'error'); return; }
+  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [REPORT_COLS.map(([h]) => esc(h)).join(',')];
+  rows.forEach(c => lines.push(REPORT_COLS.map(([, f]) => esc(f(c))).join(',')));
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `customer-report-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+function printReport() {
+  const rows = filteredRows();
+  if (rows.length === 0) { showToast('No customers to print.', 'error'); return; }
+  const w = window.open('', '_blank');
+  if (!w) { showToast('Allow pop-ups to print the report.', 'error'); return; }
+  const cols = REPORT_COLS.filter(([h]) => h !== 'Latitude' && h !== 'Longitude');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Customer report</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; color: #111; }
+      h1 { font-size: 18px; margin: 0 0 4px; } p { margin: 0 0 14px; font-size: 12px; color: #555; }
+      table { border-collapse: collapse; width: 100%; font-size: 11px; }
+      th, td { border: 1px solid #bbb; padding: 4px 6px; text-align: left; }
+      th { background: #eee; }
+    </style></head><body>
+    <h1>Rio Enterprise - Customer report</h1>
+    <p>${new Date().toLocaleDateString('en-GB')} &middot; ${rows.length} customers</p>
+    <table><thead><tr>${cols.map(([h]) => `<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(c => `<tr>${cols.map(([, f]) => `<td>${escapeHtml(f(c))}</td>`).join('')}</tr>`).join('')}</tbody></table>
+    </body></html>`);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+function getAllCustomersCache() { return allCustomers; }
+
+return { renderCustomersModule, getAllCustomersCache };
+})();
+
+const { renderItemsModule } = __items;
+const { renderStockModule } = __stock;
+const { renderCustomersModule } = __customers;
+
+/* ===== core (login, navigation, dashboard) ===== */
+(() => {
+Object.assign(__core, { showToast, fmtMoney, fmtDate });
+
+/* ---------- Shared UI helpers ---------- */
+function showToast(message, type = '') {
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`.trim();
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+function fmtMoney(n) {
+  const v = Number(n) || 0;
+  return 'Rs. ' + v.toLocaleString('en-LK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtDate(ts) {
+  if (!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+/* ---------- Module registry ---------- */
+const MODULES = {
+  dashboard: { title: 'Dashboard', sub: "Overview of today's activity" },
+  items:     { title: 'Items', sub: 'Catalogue — categories, codes, and prices', render: renderItemsModule },
+  stock:     { title: 'Stock', sub: 'Main store and vehicle stock, transfers, and checks', render: renderStockModule },
+  customers: { title: 'Customers', sub: 'Customer records, contacts, and location', render: renderCustomersModule },
+  bills:     { title: 'Bills', sub: 'Bill entry' },
+  collections: { title: 'Monthly collection', sub: 'Bulk installment collection' },
+  billbook:  { title: 'Bill book', sub: 'Bill book tracking' },
+  chitbook:  { title: 'Chit book', sub: 'Chit book tracking' },
+  financial: { title: 'Financial', sub: 'Summary and reports' },
+};
+
+const loadedModules = new Set();
+
+function switchModule(key) {
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.module === key));
+  document.querySelectorAll('.module-view').forEach(s => s.classList.add('hidden'));
+  const section = document.getElementById(`module-${key}`);
+  if (section) section.classList.remove('hidden');
+
+  const cfg = MODULES[key];
+  if (cfg) {
+    document.getElementById('pageTitle').textContent = cfg.title;
+    document.getElementById('pageSub').textContent = cfg.sub;
+    if (cfg.render && !loadedModules.has(key)) {
+      loadedModules.add(key);
+      cfg.render(section);
+    }
+  }
+  history.replaceState(null, '', `#${key}`);
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => switchModule(link.dataset.module));
+});
+
+/* ---------- Auth ---------- */
+const loginScreen = document.getElementById('loginScreen');
+const appShell = document.getElementById('appShell');
+const loginError = document.getElementById('loginError');
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  loginError.classList.add('hidden');
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    loginError.textContent = 'Sign-in failed — check the email and password.';
+    loginError.classList.remove('hidden');
+  }
+});
+
+document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginScreen.classList.add('hidden');
+    appShell.classList.remove('hidden');
+    document.getElementById('topbarUser').textContent = user.email || '';
+    const startKey = (location.hash || '#dashboard').slice(1);
+    switchModule(MODULES[startKey] ? startKey : 'dashboard');
+  } else {
+    appShell.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+  }
+});
+
+})();
+
+</script>
+</body>
+</html>
